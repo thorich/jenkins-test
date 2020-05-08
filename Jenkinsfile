@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent { dockerfile true }
   stages {
     stage("build") {
       steps {
@@ -9,11 +9,16 @@ pipeline {
     stage("test") {
       when {
         expression {
-          echo 'Branch name ' + BRANCH_NAME
-          BRANCH_NAME == 'dev'
+          BRANCH_NAME == 'master'
         }
       }
-      steps {echo 'testing application...'}
+      steps {
+        echo 'testing application...'
+        echo 'Branch name ' + BRANCH_NAME
+
+        sh 'node --version'
+        sh 'svn --version'
+      }
     }
     stage("deploy") {
       steps { echo 'deploying application...'}
